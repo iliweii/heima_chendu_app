@@ -98,9 +98,18 @@ public class DashboardFragment extends Fragment {
         chendus = chenduList;
 
         // 将数据展示到页面中
-        ListviewAdapter listviewAdapter = new ListviewAdapter(getContext(), R.layout.list_item, getChenduList(nowDate));
+        List<Chendu> chendus = getChenduList(nowDate);
+        if (chendus.size() == 0) {
+            Chendu chendu = new Chendu();
+            chendu.setWord("今天没有单词~");
+            chendu.setYinbiao("");
+            chendu.setMean("");
+            chendus.add(chendu);
+        }
+        ListviewAdapter listviewAdapter = new ListviewAdapter(getContext(), R.layout.list_item, chendus);
         list_view.setAdapter(listviewAdapter);
         setListViewHeightBasedOnChildren(list_view);
+        list_date.setText(nowDate);
 
         return root;
     }

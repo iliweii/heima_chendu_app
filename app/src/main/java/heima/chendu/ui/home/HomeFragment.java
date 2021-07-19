@@ -133,6 +133,7 @@ public class HomeFragment extends Fragment {
         meeting_total = getChenduList(nowDate).size();
         home_metting.setText(meeting_today + " / " + meeting_total);
         home_count.setText(count_today + " / " + count_total);
+        home_date.setText(nowDate);
 
         // 展示题目
         NextQuestion();
@@ -141,6 +142,10 @@ public class HomeFragment extends Fragment {
         home_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 今日没有单词情况下，暂停确认功能
+                if (getChendu(nowDate) == null) {
+                    return;
+                }
                 // 确定状态下：
                 if (home_submit.getText().equals("确定")) {
                     // Toast.makeText(getContext(), "确认", Toast.LENGTH_SHORT).show();
@@ -211,6 +216,9 @@ public class HomeFragment extends Fragment {
      */
     public Chendu getChendu(String date) {
         List<Chendu> chenduList = getChenduList(date);
+        if (chenduList.size() == 0) {
+            return null;
+        }
         int index = RandomNum(0, chenduList.size() - 1);
         Chendu cd = chenduList.get(index);
         cd.setWord(cd.getWord().trim());
@@ -239,9 +247,15 @@ public class HomeFragment extends Fragment {
         home_word.setText("");
         home_word.requestFocus();
         Chendu chendu = getChendu(nowDate);
-        home_mean.setText(chendu.getMean());
-        home_yinbiao.setText(chendu.getYinbiao());
-        home_res.setText(chendu.getWord());
+        if (chendu == null) {
+            home_mean.setText("今天没有单词了~");
+            home_yinbiao.setText("");
+            home_res.setText("");
+        } else {
+            home_mean.setText(chendu.getMean());
+            home_yinbiao.setText(chendu.getYinbiao());
+            home_res.setText(chendu.getWord());
+        }
     }
 
     /**
